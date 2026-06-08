@@ -13,6 +13,7 @@ struct PingModel {
     delay: i32,
     timeout: i32,
     success: bool,
+    status_code: i32,
     created_at: Option<DateTime<Utc>>,
 }
 
@@ -33,12 +34,13 @@ pub async fn ping_api(db: AppState, time: u64) -> bool {
     println!("");
 
     sqlx::query_as::<_, PingModel>(
-        "INSERT INTO ping (endpoint, delay, timeout, success) VALUES ($1, $2, $3, $4) RETURNING *",
+        "INSERT INTO ping (endpoint, delay, timeout, success, status_code) VALUES ($1, $2, $3, $4, $5) RETURNING *",
     )
     .bind("/api/system/ping")
     .bind(&request_duration)
     .bind(time as i32)
     .bind(result.status().is_success())
+    .bind(result.status().as_u16() as i32)
     .fetch_one(&db.client_db)
     .await
     .unwrap();
