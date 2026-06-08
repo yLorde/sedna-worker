@@ -37,7 +37,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sedna-worker:v1
+    image: sedna-worker:v1.1
     container_name: sedna-worker
     restart: unless-stopped
     environment:
