@@ -26,7 +26,7 @@ pub async fn ping_api(db: AppState, time: u64) -> bool {
 
     let request_duration: i32 = request_start.elapsed().as_millis() as i32;
 
-    println!("Timeout: {} minutes", time * 60);
+    println!("Timeout: {} minutes", time);
     println!("Status: {}", result.status());
     println!("Duration: {}ms", request_duration);
     println!("");
