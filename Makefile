@@ -1,6 +1,6 @@
 COMPOSE ?= docker compose
 
-.PHONY: build help up-worker-detached up-db-detached up-worker up-db
+.PHONY: build help up-worker-detached up-db-detached up-worker up-db logs-worker logs-db
 
 help:
 	@echo "Available commands:"
@@ -24,3 +24,9 @@ up-db:
 
 up-db-detached:
 	$(COMPOSE) up postgres -d
+
+logs-worker:
+	$(COMPOSE) logs sedna-worker
+
+logs-db:
+	$(COMPOSE) logs postgres	
