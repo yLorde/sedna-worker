@@ -4,9 +4,9 @@ services:
     container_name: sedna-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-db_admin}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password123}
       PGDATA: /var/lib/postgresql/data/pgdata
     command:
       - postgres
@@ -15,7 +15,7 @@ services:
       - -c
       - hba_file=/etc/postgresql/pg_hba.conf
     ports:
-      - 5437:5437
+      - ${POSTGRES_PORT-5437}:5437
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./configs/postgresql.conf:/etc/postgresql/postgresql.conf:ro
@@ -32,6 +32,7 @@ services:
       start_period: 20s
     networks:
       - sedna-network
+
   sedna-worker:
     build:
       context: .
@@ -39,15 +40,16 @@ services:
     image: sedna-worker
     container_name: sedna-worker
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
       API_URL: ${API_URL:-http://localhost:8080/api}
-      LOCAL_DATABASE_URL: ${LOCAL_DATABASE_URL:-postgres://admin:password123@localhost:5437/db_admin}
       POSTGRES_DB: ${POSTGRES_DB:-db_admin}
       POSTGRES_USER: ${POSTGRES_USER:-admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password123}
-      WAIT_FOR_FIRST_PING: ${WAIT_FOR_FIRST_PING:-no}
-    ports:
-      - 8000:8000
+      EMBEDDED_WORKER: ${EMBEDDED_WORKER:-0}
+      LOCAL_DATABASE_URL: ${LOCAL_DATABASE_URL:-postgres://admin:password123@postgres:5437/db_admin}
     networks:
       - sedna-network
 

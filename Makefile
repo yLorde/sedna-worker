@@ -1,6 +1,6 @@
 COMPOSE ?= docker compose
 
-.PHONY: help build up up-detached logs up-db logs-db
+.PHONY: help build up up-detached down logs up-db logs-db down-db down-all
 
 help:
 	@echo "Available commands:"
@@ -17,6 +17,9 @@ build:
 up:
 	$(COMPOSE) up --build sedna-worker
 
+down:
+	$(COMPOSE) down sedna-worker
+
 up-detached:
 	$(COMPOSE) up -d --build sedna-worker
 
@@ -28,3 +31,9 @@ up-db:
 
 logs-db:
 	$(COMPOSE) logs postgres -f
+
+down-db:
+	$(COMPOSE) down postgres
+
+down-all:
+	$(COMPOSE) down
