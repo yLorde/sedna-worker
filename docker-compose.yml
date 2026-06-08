@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     environment:
       API_URL: ${API_URL}
-      LOCAL_DATABASE_URL: postgres://admin:password123@database:5432/db_admin
+      LOCAL_DATABASE_URL: postgres://admin:password123@localhost:5437/db_admin
     ports:
       - 8000:8000
     networks:
