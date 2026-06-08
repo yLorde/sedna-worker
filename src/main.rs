@@ -1,10 +1,12 @@
+use rand::{RngExt, rng};
 use std::time::Duration;
 
 mod database;
-mod ping_api;
+mod libs;
 
-use ping_api::ping_api;
 use sqlx::{Pool, Postgres};
+
+use crate::libs::ping_api::ping_api;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -26,7 +28,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let pool = database::postgres_connection::local_connect().await;
 
-    let mut tick = tokio::time::interval(Duration::from_secs(20 * 60));
+    let random_time: u64 = rng().random_range(10..=25);
+
+    if std::env::var("WAIT_FOR_FIRST_PING").unwrap() == "yes"
+        || std::env::var("WAIT_FOR_FIRST_PING").unwrap() == "true"
+    {
+        println!("Waiting for ping...");
+        tokio::time::sleep(Duration::from_secs(random_time * 60)).await;
+        unsafe { std::env::remove_var("WAIT_FOR_FIRST_PING") };
+    }
+
+    let mut tick = tokio::time::interval(Duration::from_secs(random_time * 60));
     loop {
         tick.tick().await;
         ping_api(AppState::new(pool.clone())).await;
