@@ -1,4 +1,4 @@
-FROM rust:1.89-alpine
+FROM rust:1.89 AS builder
 
 RUN apk add --no-cache musl-dev
 
@@ -11,4 +11,9 @@ RUN mkdir src && echo "fn main() {}" > src/main.rs
 COPY ./src ./src
 RUN cargo build --release
 
-CMD ./target/release/sedna-worker
+COPY ./target/release/sedna-worker ./sedna-worker
+
+EXPOSE 8000
+ENV RUST_LOG=info
+
+CMD ["./sedna-worker"]
