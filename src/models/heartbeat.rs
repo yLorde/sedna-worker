@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
 #[derive(Debug, FromRow, Serialize, Deserialize)]
-pub struct PingModel {
+pub struct HeartbeatModel {
     pub id: i32,
     pub endpoint: String,
     pub delay: i32,

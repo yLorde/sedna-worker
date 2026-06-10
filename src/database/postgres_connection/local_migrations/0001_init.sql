@@ -1,4 +1,4 @@
-CREATE TABLE ping (
+CREATE TABLE heartbeat (
     id SERIAL NOT NULL PRIMARY KEY,
     endpoint VARCHAR(32) NOT NULL,
     delay INT DEFAULT -1,
@@ -10,6 +10,13 @@ CREATE TABLE ping (
 
 CREATE TABLE latency (
     id SERIAL NOT NULL PRIMARY KEY,
-    delay INT DEFAULT 0,
+    delay INT DEFAULT -1,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('brt'::text, now())
+);
+
+CREATE TABLE status (
+    id SERIAL NOT NULL PRIMARY KEY,
+    uptime INT DEFAULT -1,
+    latency INT DEFAULT -1,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('brt'::text, now())
 );

@@ -1,2 +1,3 @@
+pub mod heartbeat;
 pub mod latency;
-pub mod ping;
+pub mod status;

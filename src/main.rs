@@ -7,8 +7,6 @@ mod models;
 use sqlx::{Pool, Postgres};
 use tokio::time::interval;
 
-use crate::libs::{calc_latency::calc_latency, ping_api::ping_api};
-
 #[derive(Clone)]
 pub struct AppState {
     pub client_db: Pool<Postgres>,
@@ -30,23 +28,20 @@ async fn main() -> anyhow::Result<()> {
     let pool = database::postgres_connection::local_connect().await;
 
     // Get env vars
-    let time_to_ping = std::env::var("TIME_TO_PING")
-        .expect("TIME_TO_PING mut be set")
+    let delay_time = std::env::var("DELAY_TIME")
+        .expect("DELAY_TIME mut be set")
         .parse::<u64>()
         .unwrap();
 
-    let time_to_calc_latency = std::env::var("TIME_TO_CALC_LATENCY")
-        .expect("TIME_TO_CALC_LATENCY mut be set")
-        .parse::<u64>()
-        .unwrap();
+    println!("Delay time: {} \n", delay_time);
 
     // Start pings
     let ping_pool = pool.clone();
     tokio::spawn(async move {
-        let mut tick = interval(Duration::from_secs(time_to_ping * 60));
+        let mut tick = interval(Duration::from_secs(delay_time * 60));
         loop {
             tick.tick().await;
-            ping_api(AppState::new(ping_pool.clone()), time_to_ping).await;
+            libs::heartbeat::heartbeat(AppState::new(ping_pool.clone()), delay_time).await;
         }
     });
 
@@ -56,10 +51,23 @@ async fn main() -> anyhow::Result<()> {
     // Start calc latency
     let c_latency_pool = pool.clone();
     tokio::spawn(async move {
-        let mut tick = interval(Duration::from_secs(time_to_calc_latency * 60 + 15));
+        let mut tick = interval(Duration::from_secs(delay_time * 60));
         loop {
             tick.tick().await;
-            calc_latency(AppState::new(c_latency_pool.clone())).await;
+            libs::calc_latency::calc_latency(AppState::new(c_latency_pool.clone())).await;
+        }
+    });
+
+    // Wait for 30 seconds
+    tokio::time::sleep(Duration::from_secs(15)).await;
+
+    // Start make status
+    let c_status_pool = pool.clone();
+    tokio::spawn(async move {
+        let mut tick = interval(Duration::from_secs(delay_time * 60));
+        loop {
+            tick.tick().await;
+            libs::make_status::make_status(AppState::new(c_status_pool.clone())).await;
         }
     });
 
