@@ -1,8 +1,8 @@
 use std::time::Duration;
 
 mod database;
-mod libs;
 mod models;
+mod services;
 
 use sqlx::{Pool, Postgres};
 use tokio::time::interval;
@@ -41,7 +41,7 @@ async fn main() -> anyhow::Result<()> {
         let mut tick = interval(Duration::from_secs(delay_time * 60));
         loop {
             tick.tick().await;
-            libs::heartbeat::heartbeat(AppState::new(ping_pool.clone()), delay_time).await;
+            services::heartbeat::heartbeat(AppState::new(ping_pool.clone()), delay_time).await;
         }
     });
 
@@ -54,7 +54,7 @@ async fn main() -> anyhow::Result<()> {
         let mut tick = interval(Duration::from_secs(delay_time * 60));
         loop {
             tick.tick().await;
-            libs::calc_latency::calc_latency(AppState::new(c_latency_pool.clone())).await;
+            services::calc_latency::calc_latency(AppState::new(c_latency_pool.clone())).await;
         }
     });
 
@@ -67,7 +67,7 @@ async fn main() -> anyhow::Result<()> {
         let mut tick = interval(Duration::from_secs(delay_time * 60));
         loop {
             tick.tick().await;
-            libs::make_status::make_status(AppState::new(c_status_pool.clone())).await;
+            services::make_status::make_status(AppState::new(c_status_pool.clone())).await;
         }
     });
 
