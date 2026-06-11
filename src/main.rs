@@ -33,7 +33,7 @@ async fn main() -> anyhow::Result<()> {
         .parse::<u64>()
         .unwrap();
 
-    println!("Delay time: {} \n", delay_time);
+    println!("Delay time: {} minutes \n", delay_time);
 
     // Start pings
     let ping_pool = pool.clone();

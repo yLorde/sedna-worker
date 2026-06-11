@@ -13,3 +13,4 @@ uuid = { version = "1.18.1", features = ["serde", "v4"] }
 serde = { version = "1.0.228", features = ["derive"] }
 chrono = { version = "0.4.42", features = ["serde"] }
 anyhow = "1.0.102"
+curl = "0.4.50"
