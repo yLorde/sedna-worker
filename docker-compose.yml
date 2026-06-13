@@ -50,6 +50,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password123}
       EMBEDDED_WORKER: ${EMBEDDED_WORKER:-0}
+      MIGRATE_ON_RUN: ${MIGRATE_ON_RUN:-false}
+      SIZE_OF_HEARTBEATS_TO_CALC_LATENCY: ${SIZE_OF_HEARTBEATS_TO_CALC_LATENCY:-25}
       LOCAL_DATABASE_URL: ${LOCAL_DATABASE_URL:-postgres://admin:password123@postgres:5437/db_admin}
     networks:
       - sedna-network
