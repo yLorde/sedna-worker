@@ -34,8 +34,9 @@ pub async fn local_connect() -> Pool<Postgres> {
     pool
 }
 
-pub async fn prod_connect()  {
-    let prod_database_url = std::env::var("PROD_DATABASE_URL").expect("LOCAL_DATABASE_URL must be set");
+pub async fn prod_connect() {
+    let prod_database_url =
+        std::env::var("PROD_DATABASE_URL").expect("PROD_DATABASE_URL must be set");
 
     let pool = sqlx::postgres::PgPoolOptions::new()
         .max_connections(20)
@@ -47,6 +48,8 @@ pub async fn prod_connect()  {
 
     match pool.begin().await {
         Ok(_) => println!("Successfully connected to production postgres\n"),
-        Err(e) => { println!("Error connecting to production postgres: {:?} \n", e); }
+        Err(e) => {
+            println!("Error connecting to production postgres: {:?} \n", e);
+        }
     }
 }
