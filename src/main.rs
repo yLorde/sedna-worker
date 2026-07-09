@@ -28,6 +28,7 @@ async fn main() -> anyhow::Result<()> {
     env_logger::init();
 
     let pool = database::postgres_connection::local_connect().await;
+    database::postgres_connection::prod_connect().await;
 
     // Get env vars
     let delay_time: u64 = var("DELAY_TIME")

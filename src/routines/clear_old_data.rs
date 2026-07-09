@@ -81,5 +81,5 @@ pub async fn clear_old_data(db: AppState) {
     .await
     .unwrap();
 
-    println!("Done!");
+    println!("Done!\n");
 }
