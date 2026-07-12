@@ -1,9 +1,21 @@
+use dotenv::var;
+
 use crate::{
     AppState,
     models::{latency::LatencyModel, status::StatusModel},
 };
 
 pub async fn make_status(db: AppState) {
+    let save_data_on_database: bool = var("SAVE_DATA_ON_DATABASE")
+        .expect("SAVE_DATA_ON_DATABASE must be set")
+        .parse::<bool>()
+        .unwrap();
+
+    if !save_data_on_database {
+        println!("-- == -- [END] -- == --\n");
+        return;
+    }
+
     println!("STATUS:");
 
     let total_pings: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM heartbeat")

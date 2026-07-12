@@ -57,6 +57,8 @@ services:
       SIZE_OF_STATUS_DATA_AFTER_CLEAR: ${SIZE_OF_STATUS_DATA_AFTER_CLEAR:-50}
       LOCAL_DATABASE_URL: ${LOCAL_DATABASE_URL:-postgres://admin:password123@postgres:5437/db_admin}
       PROD_DATABASE_URL: ${PROD_DATABASE_URL}
+      CLEAR_OLD_DATA: ${CLEAR_OLD_DATA:-true}
+      SAVE_DATA_ON_DATABASE: ${SAVE_DATA_ON_DATABASE:-true}
     networks:
       - sedna-network
 

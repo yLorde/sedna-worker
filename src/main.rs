@@ -36,7 +36,14 @@ async fn main() -> anyhow::Result<()> {
         .parse::<u64>()
         .unwrap();
 
-    println!("Delay time: {} minutes \n", delay_time);
+    let save_data_on_database: bool = var("SAVE_DATA_ON_DATABASE")
+        .expect("SAVE_DATA_ON_DATABASE must be set")
+        .parse::<bool>()
+        .unwrap();
+
+    println!("Delay time: {} minutes", delay_time);
+    println!("Save data: {}", save_data_on_database);
+    println!("");
 
     // Start pings
     let ping_pool = pool.clone();

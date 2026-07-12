@@ -2,8 +2,18 @@ use crate::{
     AppState,
     models::{heartbeat::HeartbeatModel, latency::LatencyModel},
 };
+use std::env::var;
 
 pub async fn calc_latency(db: AppState) {
+    let save_data_on_database: bool = var("SAVE_DATA_ON_DATABASE")
+        .expect("SAVE_DATA_ON_DATABASE must be set")
+        .parse::<bool>()
+        .unwrap();
+
+    if !save_data_on_database {
+        return;
+    };
+
     println!("CALC LATENCY:");
 
     let size_of_heartbeats_to_calc_latency: i32 =
