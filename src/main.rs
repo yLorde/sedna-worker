@@ -41,8 +41,14 @@ async fn main() -> anyhow::Result<()> {
         .parse::<bool>()
         .unwrap();
 
+    let clear_old_data: bool = var("CLEAR_OLD_DATA")
+        .expect("CLEAR_OLD_DATA must be set")
+        .parse::<bool>()
+        .unwrap();
+
     println!("Delay time: {} minutes", delay_time);
     println!("Save data: {}", save_data_on_database);
+    println!("Clear old data: {}", clear_old_data);
     println!("");
 
     // Start pings

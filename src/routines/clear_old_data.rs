@@ -1,6 +1,15 @@
 use crate::AppState;
 
 pub async fn clear_old_data(db: AppState) {
+    let clear_old_data: bool = std::env::var("CLEAR_OLD_DATA")
+        .expect("CLEAR_OLD_DATA must be set")
+        .parse::<bool>()
+        .unwrap();
+
+    if !clear_old_data {
+        return;
+    }
+
     println!("CLEAR OLD DATA:");
 
     // Get size of status
